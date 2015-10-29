@@ -1,0 +1,21 @@
+{
+  "manifest_version": 2,
+
+  "name": "JDIGenerateJSON",
+  "description": "This extension shows a Google Image search result for the current page",
+  "version": "1.0",
+    "content_scripts": [
+    {
+      "matches": [ "http://*/*", "https://*/*" ],
+      "js": ["libs/cookie.js", "src/results.js", "libs/jquery-2.1.4.js"]
+    }
+  ],
+  "browser_action": {
+    "default_icon": "plugin/icon.png",
+    "default_popup": "plugin/popup.html"
+  },
+  "permissions": [
+    "tabs",
+	"activeTab"
+  ]
+}
