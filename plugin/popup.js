@@ -11,15 +11,13 @@ function run() {
 	// 	file: 'window.js'
 	// });
 
-	host = document.getElementById("host").value;
-	page1 = document.getElementById("page1").value;
-	page2 = document.getElementById("page2").value;
+	isMark = $("#isMark").is(':checked');
 
-	chrome.tabs.executeScript(null, { code: "var base = '" + host + "'; var pages = ['" + page1 + "','" + page2 + "'];"},
+	chrome.tabs.executeScript(null, { code: "var isMark = " + isMark},
 	function() {
 		chrome.tabs.executeScript(
 			null,
-			{ file: "src/scr3.js" }
+			{ file: "src/main.js" }
 		);
 	});
 

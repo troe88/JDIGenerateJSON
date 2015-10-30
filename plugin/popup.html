@@ -1,28 +1,20 @@
 <!doctype html>
 <html>
-  <head>
+<head>
     <title>Getting Started Extension's Popup</title>
     <style>
-      body {
-        font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
-        font-size: 100%;
-      }
-      #status {
-        /* avoid an excessively wide status text */
-        white-space: pre;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        max-width: 400px;
-      }
+        body {
+            font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
+            font-size: 100%;
+            width: 200px;
+        }
     </style>
     <script src="../libs/jquery-2.1.4.js"></script>
     <script src="popup.js"></script>
-  </head>
-  <body>
-	<input id = "host" type="text" value = "http://localhost:63342/HTMLParse/"></input>
-	<input id = "page1" type="text" value = "index.html"></input>
-	<input id = "page2" type="text" value = "page1.html"></input>
-	<button id="btn1">Run stript</button>
-  </body>
+</head>
+<body>
+<label><input type="checkbox" id="isMark" checked="true">isMark</label>
+<div><button id="btn1">Run stript</button></div>
+</body>
 </html>
 

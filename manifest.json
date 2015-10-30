@@ -7,7 +7,7 @@
     "content_scripts": [
     {
       "matches": [ "http://*/*", "https://*/*" ],
-      "js": ["libs/cookie.js", "src/results.js", "libs/jquery-2.1.4.js"]
+      "js": ["libs/cookie.js", "src/window.js", "libs/jquery-2.1.4.js", "libs/json-viewer/jquery.json-viewer.js"]
     }
   ],
   "browser_action": {

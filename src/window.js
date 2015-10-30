@@ -1,7 +1,8 @@
 function openResultsWindow(jsonData) {
     var data = JSON.stringify(jsonData, undefined, 4);
     var win = window.open("", "Result JSON", "toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=500, height=1000, top=" + (screen.height - 400) + ", left=" + (screen.width - 840));
-    win.document.head.innerHTML = "<style> \
+    win.document.head.innerHTML = "<link rel='stylesheet'>\
+                                    <style> \
                                        pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; } \
                                        .string { color: green; } \
                                        .number { color: darkorange; } \
@@ -9,7 +10,12 @@ function openResultsWindow(jsonData) {
                                        .null { color: magenta; } \
                                        .key { color: red; } \
                                    </style>"
-    win.document.body.appendChild(document.createElement('pre')).innerHTML = syntaxHighlight(data);
+    if(win.document.getElementsByTagName("pre").length === 0){
+        win.document.body.appendChild(document.createElement('pre')).innerHTML = syntaxHighlight(data);
+    } else {
+        win.document.getElementsByTagName("pre")[0].innerHTML = syntaxHighlight(data);
+    }
+
 }
 
 function syntaxHighlight(json) {
