@@ -7,7 +7,7 @@
     "content_scripts": [
     {
       "matches": [ "http://*/*", "https://*/*" ],
-      "js": ["libs/cookie.js", "src/window.js", "libs/jquery-2.1.4.js", "libs/json-viewer/jquery.json-viewer.js"]
+      "js": ["libs/cookie.js", "src/window.js", "libs/jquery-2.1.4.js", "libs/json-viewer/jquery.json-viewer.js", "libs/string.format-1.0.packed.js"]
     }
   ],
   "browser_action": {
@@ -16,6 +16,9 @@
   },
   "permissions": [
     "tabs",
-	"activeTab"
+	"activeTab",
+    "storage",
+    "alwaysOnTopWindows"
   ]
+
 }

@@ -17,7 +17,7 @@
 	 * @return boolean
 	 */
 	function isUrl(string) {
-		 var regexp = /^(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
+		 var regexp = /^(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
 		 return regexp.test(string);
 	}
 
@@ -47,7 +47,7 @@
 			if (json.length > 0) {
 				html += '[<ol class="json-array">';
 				for (var i = 0; i < json.length; ++i) {
-					html += '<li>'
+					html += '<li>';
 					// Add toggle button if item is collapsable
 					if (isCollapsable(json[i]))
 						html += '<a href class="json-toggle"></a>';
@@ -101,7 +101,7 @@
 		return this.each(function() {
 
 			// Transform to HTML
-			var html = json2html(json)
+			var html = json2html(json);
 			if (isCollapsable(json))
 				html = '<a href class="json-toggle"></a>' + html;
 
