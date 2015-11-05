@@ -1,42 +1,66 @@
 var res;
+var isMark;
+var onlyMark;
 
 $(document).ready(function () {
+    chrome.storage.sync.clear()
+
     $("#btn1").on("click", run);
-    $('#po code').each(function(i, block) {
+    $('#po code').each(function (i, block) {
         hljs.highlightBlock(block);
     });
+
+    chrome.tabs.executeScript(null, {file: "src/main.js"}, function () {
+    });
+
 });
 
 function run() {
-    // chrome.tabs.executeScript({
-    // 	code: "document.body.style.backgroundColor='red'; alert('dima')"
-    // });
+    chrome.storage.sync.clear();
+
+    isMark = $("#isMark").is(':checked');
+    onlyMark = $("#onlyMark").is(':checked');
+
+    chrome.storage.sync.set({"run": "yes", "onlyMark": onlyMark, "isMark": isMark}, function () {
+        console.log('run');
+    });
 
     // chrome.tabs.executeScript({
     // 	file: 'window.js'
     // });
 
-    var isMark = $("#isMark").is(':checked');
-    var onlyMark = $("#onlyMark").is(':checked');
+    //chrome.tabs.executeScript({
+    //    code: "var isMark = " + isMark + ";var onlyMark = " + onlyMark
+    //});
+    //
 
-    chrome.tabs.executeScript(null, {code: "var isMark = " + isMark + "; onlyMark = " + onlyMark},
-        function () {
-            chrome.tabs.executeScript(
-                null,
-                {file: "src/main.js"}
-            );
-        });
+    //chrome.tabs.executeScript(null, null,
+    //    function () {
+    //        chrome.tabs.executeScript(
+    //            null,
+    //            {file: "src/main.js"}
+    //        );
+    //    });
 }
 
 chrome.storage.onChanged.addListener(function (changes, namespace) {
-    var data = changes['value'].oldValue;
-    if(data === undefined) return;
-    var obj = $.parseJSON(data);
-    $('#json').jsonViewer(obj);
-    filesArray = new Array;
-    process(obj)
-    $('#po code').text(filesArray);
-    $('#po code').each(function(i, block) {
-        hljs.highlightBlock(block);
-    });
+    for (key in changes) {
+        var storageChange = changes[key];
+        switch (key) {
+            case "value":
+                if (changes['value'].newValue !== undefined) {
+                    var data = changes['value'].newValue;
+                    if (data === undefined) return;
+                    var obj = $.parseJSON(data);
+                    $('#json').jsonViewer(obj);
+                    filesArray = new Array;
+                    process(obj)
+                    $('#po code').text(filesArray);
+                    $('#po code').each(function (i, block) {
+                        hljs.highlightBlock(block);
+                    });
+                }
+                break;
+        }
+    }
 });

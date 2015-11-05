@@ -10,6 +10,11 @@ var IForm = "IForm"
 var IPage = "IPage"
 var IElement = "IElement"
 
+var options = {
+    onlyMark : "",
+    isMark : ""
+};
+
 var Utils = {
     randColor: function () {
         return "#" + ((1 << 24) * Math.random() | 0).toString(16);
@@ -23,8 +28,6 @@ var Utils = {
 };
 
 function saveChanges(data) {
-    chrome.storage.sync.clear()
-
     if (!data) {
         console.log('Error: No value specified');
         data = "texzt";
@@ -51,8 +54,8 @@ function getOnlyMark() {
     return res;
 }
 
-(function () {
-    var elements = (onlyMark === true) ? getOnlyMark() : getAll();
+function start() {
+    var elements = (options.onlyMark === true) ? getOnlyMark() : getAll();
     var page = {
         name: location.pathname,
         url: document.URL,
@@ -65,8 +68,7 @@ function getOnlyMark() {
     //openResultsWindow(page, filesArray);
 
     saveChanges(page);
-
-}());
+}
 
 function getPageElements(elements) {
     var allElements = elements;//getElementsArray(document, "[" + jdi_type + "]");
@@ -74,7 +76,7 @@ function getPageElements(elements) {
     var children = [];
 
     $.each(allElements, function (index, value) {
-        if (isMark) {
+        if (options.isMark) {
             Utils.mark(value);
         }
         resElArr.push(getElementData(value))
@@ -136,3 +138,19 @@ function getElementData(tmpElem) {
 function getElementsArray(tmpContainer, findRule) {
     return Array.prototype.slice.call(tmpContainer.querySelectorAll(findRule));
 }
+
+
+chrome.storage.onChanged.addListener(function (changes, namespace) {
+    for (key in changes) {
+        var storageChange = changes[key];
+        switch (key) {
+            case "run":
+                if(storageChange.newValue === "yes"){
+                    options.onlyMark = changes["onlyMark"].newValue;
+                    options.isMark = changes["isMark"].newValue;
+                    start();
+                }
+                break;
+        }
+    }
+});
