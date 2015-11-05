@@ -31,18 +31,34 @@ function saveChanges(data) {
         return;
     }
 
-    chrome.storage.sync.set({'value': JSON.stringify(data)}, function() {
+    chrome.storage.sync.set({'value': JSON.stringify(data)}, function () {
         console.log('Settings saved');
     });
 }
 
+function getAll() {
+    return getElementsArray(document, "[" + jdi_type + "]");
+}
+
+function getOnlyMark() {
+    var res = [];
+    var all = getAll();
+    $.each(all, function (index, value) {
+        if (value.getAttribute("jdi-selected") === "true") {
+            res.push(value);
+        }
+    });
+    return res;
+}
+
 (function () {
+    var elements = (onlyMark === true) ? getOnlyMark() : getAll();
     var page = {
         name: location.pathname,
         url: document.URL,
         title: document.title,
-        type : IPage,
-        elements: getPageElements()
+        type: IPage,
+        elements: getPageElements(elements)
     };
 
     //process(page);
@@ -52,8 +68,8 @@ function saveChanges(data) {
 
 }());
 
-function getPageElements() {
-    var allElements = getElementsArray(document, "[" + jdi_type + "]");
+function getPageElements(elements) {
+    var allElements = elements;//getElementsArray(document, "[" + jdi_type + "]");
     var resElArr = [];
     var children = [];
 
@@ -102,7 +118,7 @@ function getElementData(tmpElem) {
         type: tmpElem.getAttribute(jdi_type),
         name: tmpElem.getAttribute(jdi_name),
         parent: (tmpElem.hasAttribute(jdi_parent)) ? tmpElem.getAttribute(jdi_parent) : undefined,
-        gen : (tmpElem.hasAttribute(jdi_gen)) ? tmpElem.getAttribute(jdi_gen) : undefined,
+        gen: (tmpElem.hasAttribute(jdi_gen)) ? tmpElem.getAttribute(jdi_gen) : undefined,
         elements: [],
         // locator : "[" + jdi_name + "='" + tmpElem.getAttribute(jdi_name) + "']",
         toJSON: function () {
@@ -110,7 +126,7 @@ function getElementData(tmpElem) {
                 name: this.name,
                 type: this.type,
                 //parent: this.parent,
-                gen : this.gen,
+                gen: this.gen,
                 elements: (this.elements !== undefined) ? ((this.elements.length > 0) ? this.elements : undefined) : undefined
             }
         }

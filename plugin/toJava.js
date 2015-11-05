@@ -1,5 +1,9 @@
 var filesArray = [];
 
+function removeSpaces(str) {
+    return str.replace(/\s+/g, '_');
+}
+
 var templates = {
     ITextArea: "",
     IButton: "",
@@ -47,7 +51,7 @@ var modelComposite = {
         filesArray.push(templates.simpleClass.format(data.gen, genGenClassForm(data.elements)));
     },
     IPage: function (data) {
-        filesArray.push(templates[data.type].format(data.title, getDataFromElements(data.elements)));
+        filesArray.push(templates[data.type].format(removeSpaces(data.title), getDataFromElements(data.elements)));
     }
 };
 

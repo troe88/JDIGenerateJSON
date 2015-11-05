@@ -16,9 +16,10 @@ function run() {
     // 	file: 'window.js'
     // });
 
-    isMark = $("#isMark").is(':checked');
+    var isMark = $("#isMark").is(':checked');
+    var onlyMark = $("#onlyMark").is(':checked');
 
-    chrome.tabs.executeScript(null, {code: "var isMark = " + isMark},
+    chrome.tabs.executeScript(null, {code: "var isMark = " + isMark + "; onlyMark = " + onlyMark},
         function () {
             chrome.tabs.executeScript(
                 null,
