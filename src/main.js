@@ -3,52 +3,12 @@ var jdi_name = "jdi-name";
 var jdi_parent = "jdi-parent";
 var jdi_gen = "jdi-gen"
 
-var filesArray = [];
 var ITextField = "ITextField";
 var ITextArea = "ITextArea";
 var IButton = "IButton";
 var IForm = "IForm"
 var IPage = "IPage"
 var IElement = "IElement"
-
-var templates = {
-    ITextArea: "",
-    IButton: "",
-    IForm: "\nclass {0} extends IForm<{2}> {\n{1}}",
-    IPage: "\nclass {0} extends IPage {\n{1}}",
-    IElement: "",
-    ITextField: "",
-    simpleClass: "\nclass {0} {\n{1}\n}",
-    cfw: "\tFindBy(css = \"{2}\")\n\t{0} {1};\n\n",
-    cf: "\t{0} {1};\n",
-    css: "[jdi-type={0}]"
-};
-
-var moduleSimple = function(data) {
-    return templates.cfw.format(data.type, data.name, templates.css.format(data.name));
-}
-
-var modelGenField = {
-    ITextArea: moduleSimple,
-    IButton: moduleSimple,
-    IForm: function (data) {
-        process(data);
-        return templates.cfw.format(data.name, "form", templates.css.format(data.name));
-    },
-    IPage: undefined,
-    IElement: moduleSimple,
-    ITextField: moduleSimple,
-};
-
-var modelComposite = {
-    IForm: function (data) {
-        filesArray.push(templates[data.type].format(data.name, getDataFromElements(data.elements), data.gen));
-        filesArray.push(templates.simpleClass.format(data.gen, genGenClassForm(data.elements)));
-    },
-    IPage: function (data) {
-        filesArray.push(templates[data.type].format(data.title, getDataFromElements(data.elements)));
-    }
-};
 
 var Utils = {
     randColor: function () {
@@ -76,10 +36,6 @@ function saveChanges(data) {
     });
 }
 
-//chrome.storage.sync.get(null, function(items) {
-//    console.log(items);
-//});
-
 (function () {
     var page = {
         name: location.pathname,
@@ -88,8 +44,9 @@ function saveChanges(data) {
         type : IPage,
         elements: getPageElements()
     };
-    process(page);
-    openResultsWindow(page, filesArray);
+
+    //process(page);
+    //openResultsWindow(page, filesArray);
 
     saveChanges(page);
 
@@ -122,7 +79,6 @@ function proc(prn, cld) {
             j = (prn[j] === undefined) ? 0 : j;
             i = (cld[i] === undefined) ? 0 : i;
             if (prn[j].name === cld[i].parent) {
-                // console.log(prn[j].name + " contains " + cld[i].name);
                 prn[j].elements.push(cld.splice(i, 1)[0]);
                 i = j = -1;
                 break;
@@ -164,33 +120,3 @@ function getElementData(tmpElem) {
 function getElementsArray(tmpContainer, findRule) {
     return Array.prototype.slice.call(tmpContainer.querySelectorAll(findRule));
 }
-
-// NEW
-function getDataFromElements(elements) {
-    var res = ""
-    $.each(elements, function (index, value) {
-        try {
-            res += modelGenField[value.type](value);
-        } catch (e) {
-            console.log("qwe")
-        }
-    });
-    return res;
-}
-
-function genGenClassForm(elements) {
-    var res = ""
-    $.each(elements, function (index, value) {
-        switch (value.type) {
-            default :
-                res += "{0} {1};\t\\*for {2}*\\\n".format("Object", value.name, value.type);
-                break
-        }
-    });
-    return res;
-}
-
-function process(data) {
-    modelComposite[data.type](data);
-}
-// NEW

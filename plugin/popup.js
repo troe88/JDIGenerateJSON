@@ -2,6 +2,9 @@ var res;
 
 $(document).ready(function () {
     $("#btn1").on("click", run);
+    $('#po code').each(function(i, block) {
+        hljs.highlightBlock(block);
+    });
 });
 
 function run() {
@@ -26,5 +29,13 @@ function run() {
 
 chrome.storage.onChanged.addListener(function (changes, namespace) {
     var data = changes['value'].oldValue;
-    $('#json-renderer').jsonViewer(JSON.parse(data));
+    if(data === undefined) return;
+    var obj = $.parseJSON(data);
+    $('#json').jsonViewer(obj);
+    filesArray = new Array;
+    process(obj)
+    $('#po code').text(filesArray);
+    $('#po code').each(function(i, block) {
+        hljs.highlightBlock(block);
+    });
 });

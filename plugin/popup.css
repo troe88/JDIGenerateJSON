@@ -1,0 +1,48 @@
+body {
+    /*height: 800px;*/
+    width: 650px;
+    display: inline-block;
+}
+
+.content {
+    display: block;
+    border: 1px solid black;
+    width: 49.0%;
+    height: 100%;
+}
+
+#myCode {
+    display: block;
+    height: 100%;
+}
+
+#right:before {
+    content: "pageObject.java";
+}
+
+#left:before {
+    content: "JSON";
+}
+
+#right:before, #left:before {
+    border-bottom: 1px solid black;
+    display: block;
+    padding: 5px;
+}
+
+#right {
+    background-color: #f0f0f0;
+    float: left;
+    margin: 0px 0px 0px 5px;
+}
+
+#left {
+    background-color: bisque;
+    float: left;
+}
+pre {
+    display: block;
+    padding: 15px;
+    font-weight: bolder;
+    height: 100%;
+}

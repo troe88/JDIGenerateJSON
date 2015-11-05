@@ -1,23 +1,32 @@
 <!doctype html>
 <html>
 <head>
-    <title>Getting Started Extension's Popup</title>
-    <style>
-        body {
-            font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
-            font-size: 100%;
-            width: 200px;
-        }
-    </style>
+    <title>JDI</title>
     <script src="../libs/jquery-2.1.4.js"></script>
     <script src="../libs/json-viewer/jquery.json-viewer.js"></script>
     <link rel="stylesheet" href="../libs/json-viewer/jquery.json-viewer.css" />
+    <link rel="stylesheet" href="popup.css" />
     <script src="popup.js"></script>
+    <script src="toJava.js"></script>
+    <script src="../libs/string.format-1.0.packed.js"></script>
+    <link rel="stylesheet" href="../libs/highlight/styles/default.css">
+    <script src="../libs/highlight/highlight.pack.js"></script>
 </head>
 <body>
 <label><input type="checkbox" id="isMark" checked="true">isMark</label>
-<div><button id="btn1">Run stript</button></div>
-<pre id="json-renderer"></pre>
+<div>
+    <button id="btn1">Run stript</button>
+</div>
+<div class="content" id="left">
+    <pre id="json">
+    </pre>
+</div>
+<div class="content" id="right">
+    <pre id="po">
+        <code class="hljs" id="myCode">
+        </code>
+    </pre>
+</div>
 </body>
 </html>
 
