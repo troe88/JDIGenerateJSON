@@ -12,6 +12,7 @@ var templates = {
     IElement: "",
     ITextField: "",
     simpleClass: "\nclass {0} {\n{1}\n}",
+    IPagination: "public Pagination {0} = new Pagination({1});",
     cfw: "\t@FindBy(css = \"[jdi-name={1}]\")\n\tpublic {0} {1};\n\n",
     cf: "\t{0} {1};\n",
 };
@@ -40,6 +41,13 @@ var modelGenField = {
         process(data);
         return templates.cfw.format(data.name, "form");
     },
+    IPagination : function(data) {
+        return templates.IPagination.format(data.name, $.each(data.elements, function(index, value){
+
+        }));
+    },
+    ITimePicker : moduleSimple,
+    IDatePicker : moduleSimple,
     IPage: undefined,
     IElement: moduleSimple,
     ITextField: moduleSimple,
@@ -82,4 +90,10 @@ function genGenClassForm(elements) {
 
 function process(data) {
     modelComposite[data.type](data);
+}
+
+function translateToJava(data){
+    filesArray = new Array;
+    modelComposite[data.type](data);
+    return filesArray;
 }
