@@ -63,3 +63,10 @@ var FindByTemplates = {
         return "\n\t\tBy.cssSelector(\"[jdi-name={0}]\")".format(selector);
     }
 }
+
+var createRecord = function(data){
+    return {
+        name : data.name,
+        data : data.print()
+    }
+}

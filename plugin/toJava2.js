@@ -51,9 +51,19 @@ var ElemTemplates = {
     IRange: moduleSimple,
 }
 
+var filesTemplate = {
+    IForm: function (data) {
+        data.extendz = "{0}<{1}>".format(data.type, data.gen);
+        result.push(createRecord(new JavaClass(data)));
+    },
+    IPage: function (data) {
+        result.push(createRecord(new JavaClass(data)));
+    }
+};
+
 var JavaClass = function (src) {
     this.name = src.name;
-    this.extendz = src.type;
+    this.extendz = src.extendz === undefined ? src.type : src.extendz;
     this.includes = new Array;
     this.package = "my.package;";
     this.elements = src.elements;
@@ -95,24 +105,6 @@ var JavaClass = function (src) {
     };
 
     this.name = this.genName(src.name);
-};
-
-var createRecord = function(data){
-    return {
-        name : data.name,
-        data : data.print()
-    }
-}
-
-var filesTemplate = {
-    IForm: function (data) {
-        var data = new JavaClass(data);
-        result.push(createRecord(data));
-    },
-    IPage: function (data) {
-        var data = new JavaClass(data);
-        result.push(createRecord(data));
-    }
 };
 
 var processJSON = function (data) {

@@ -1,12 +1,17 @@
 var saveButton;
 var java;
-
+var textInput;
 $(document).ready(function () {
     chrome.storage.sync.clear()
+    textInput = $("#fileName");
+    textInput.focus(function() {
+        textInput.css("background-color", "white");
+    });
 
     $("#btn1").on("click", run);
     saveButton = $("#btn2");
     saveButton.on("click", save);
+
     $('#po code').each(function (i, block) {
         hljs.highlightBlock(block);
     });
@@ -21,11 +26,15 @@ function getCBStatus(id) {
     return $(id).is(':checked');
 }
 
-function run() {
+var clear = function() {
     java = [];
     saveButton.prop("disabled", true);
+    textInput.css("background-color", "white")
     chrome.storage.sync.clear();
+}
 
+function run() {
+    clear();
     chrome.storage.sync.set({
         "run": "yes",
         "isMark": getCBStatus("#isMark")
@@ -56,13 +65,11 @@ function save() {
 }
 
 var saveResults = function () {
-    var textInput = $("#fileName");
     var text = textInput.val();
 
     if(text.length === 0){
         textInput.css("background-color", "#FFD1CC")
     } else {
-        textInput.css("background-color", "white")
         saveAsZip(java, text);
     }
 }
@@ -83,7 +90,6 @@ function paint(data) {
         hljs.highlightBlock(block);
     });
     saveButton.prop("disabled", false);
-    //saveResults(java);
 }
 
 chrome.storage.onChanged.addListener(function (changes, namespace) {
