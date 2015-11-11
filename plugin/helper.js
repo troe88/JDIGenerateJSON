@@ -13,7 +13,13 @@ var IncludesDictionary = {
     IElement: "com.epam.jdi.IElement",
     ITextField: "com.epam.jdi.ITextField",
     RFileInput: "com.epam.jdi.RFileInput",
-    IRange: "com.epam.jdi.IRange"
+    IRange: "com.epam.jdi.IRange",
+    String: "com.java.String"
+}
+
+var ConvertToJavaType = {
+    ITextArea: "String",
+    ITextField: "String",
 }
 
 function simpleFileld(elem) {
@@ -24,6 +30,9 @@ function simpleFileld(elem) {
 
 var FieldTemplates = {
     unknown: "\n\t/*{0} {1}*/\n",
+    String:  function(elem) {
+        return "\tpublic {0} {1};\n".format(elem.type, elem.name);
+    },
     ITextArea: simpleFileld,
     IButton: simpleFileld,
     IForm: simpleFileld,
@@ -69,4 +78,12 @@ var createRecord = function(data){
         name : data.name,
         data : data.print()
     }
+}
+
+String.prototype.capitalizeFirstLetter = function() {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+}
+
+String.prototype.downFirstLetter = function() {
+    return this.charAt(0).toLowerCase() + this.slice(1);
 }

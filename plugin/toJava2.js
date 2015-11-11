@@ -33,6 +33,7 @@ var moduleSimple = function (elem) {
 }
 
 var ElemTemplates = {
+    String: moduleSimple,
     ITextArea: moduleSimple,
     IButton: moduleSimple,
     IForm: function (data) {
@@ -53,21 +54,40 @@ var ElemTemplates = {
 
 var filesTemplate = {
     IForm: function (data) {
+        data.name = data.name.capitalizeFirstLetter();
+        var genClass = JSON.parse(JSON.stringify(data));
+        genClass.name = data.gen;
+        genClass.type = undefined;
+        genClass.extendz = undefined;
+        $.each(genClass.elements, function (i, val) {
+            if (ConvertToJavaType[val.type] !== undefined) {
+                val.type = ConvertToJavaType[val.type];
+            } else {
+                val.type += " ";
+            }
+        });
+        result.push(createRecord(new JavaClass(genClass)));
+        //
         data.extendz = "{0}<{1}>".format(data.type, data.gen);
+        data.type = data.name;
+        FieldTemplates[data.type] = function (elem) {
+            return "\n\tpublic {0} {1};\n".format(elem.type, elem.name.downFirstLetter());
+        };
+        //IncludesDictionary[data.type] = "my.package.{0}".format(data.type);
         result.push(createRecord(new JavaClass(data)));
     },
     IPage: function (data) {
+        data.extendz = "IPage";
         result.push(createRecord(new JavaClass(data)));
     }
 };
 
 var JavaClass = function (src) {
     this.name = src.name;
-    this.extendz = src.extendz === undefined ? src.type : src.extendz;
+    this.extendz = src.extendz;
     this.includes = new Array;
     this.package = "my.package;";
     this.elements = src.elements;
-
 
     this.genName = function (name) {
         return src.title === undefined ? src.name : src.title;
@@ -75,7 +95,7 @@ var JavaClass = function (src) {
     this.genIncludes = function () {
         var inc = new Array;
         $.each(this.elements, function (i, val) {
-            var temp = IncludesDictionary[val.type];
+            var temp = (IncludesDictionary[val.type] !== undefined) ? IncludesDictionary[val.type] : "";
             if (inc.indexOf(temp) < 0) {
                 inc.push(temp);
             }
@@ -83,25 +103,31 @@ var JavaClass = function (src) {
         this.includes = inc;
     };
     this.getIncludes = function () {
-        this.genIncludes();
         var total = "";
         $.each(this.includes, function (i, val) {
-            total += Templates.imports(val);
+            total += val.length > 0 ? Templates.imports(val) : "";
         });
         return total;
     };
     this.getElements = function () {
         var total = "";
         $.each(this.elements, function (i, val) {
-            total += ElemTemplates[val.type](val);
+            try {
+                total += ElemTemplates[val.type](val);
+            } catch (e) {
+                total += "\t/*{0} {1}*/\n".format(val.type, val.name);
+            }
         });
         return total;
     };
     this.genClass = function () {
-        return (this.extendz === null) ? Templates.javaClass(this.name, this.getElements()) : Templates.javaClassExtends(this.name, this.extendz, this.getElements());
+        var elements = this.getElements();
+        this.genIncludes();
+        return (this.extendz === null || this.extendz === undefined) ? Templates.javaClass(this.name, elements) : Templates.javaClassExtends(this.name, this.extendz, elements);
     };
     this.print = function () {
-        return Templates.javaPage(this.package, this.getIncludes(), this.genClass());
+        var clazz = this.genClass();
+        return Templates.javaPage(this.package, this.getIncludes(), clazz);
     };
 
     this.name = this.genName(src.name);
