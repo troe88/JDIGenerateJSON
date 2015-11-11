@@ -4,19 +4,37 @@
     <title>JDI</title>
     <script src="../libs/jquery-2.1.4.js"></script>
     <script src="../libs/json-viewer/jquery.json-viewer.js"></script>
-    <link rel="stylesheet" href="../libs/json-viewer/jquery.json-viewer.css" />
-    <link rel="stylesheet" href="popup.css" />
+    <link rel="stylesheet" href="../libs/json-viewer/jquery.json-viewer.css"/>
+    <link rel="stylesheet" href="popup.css"/>
     <script src="popup.js"></script>
     <script src="toJava.js"></script>
+    <script src="helper.js"></script>
+    <script src="toJava2.js"></script>
     <script src="../libs/string.format-1.0.packed.js"></script>
     <link rel="stylesheet" href="../libs/highlight/styles/default.css">
     <script src="../libs/highlight/highlight.pack.js"></script>
+    <script src="../libs/zip.js"></script>
+    <script src="../libs/zip-fs.js"></script>
+    <script src="../libs/jszip.js"></script>
+    <script src="../libs/FileSaver.js"></script>
+    <script src="saveAsZip.js"></script>
 </head>
 <body>
-<div><label><input type="checkbox" id="isMark" checked="true">Added elements will be painted.</label></div>
-<div><label><input type="checkbox" id="onlyMark" checked="true">Added only manual marked elements.</label></div>
-<div>
-    <button id="btn1">Run stript</button>
+<div id="inputModule">
+    <div class="inputWrapper">
+        <label>Added elements will be painted</label>
+        <input type="checkbox" id="isMark">
+    </div>
+    <div class="inputWrapper">
+        <label>Result ZIP archive name</label>
+        <input type="fileName" id="fileName" placeholder="fileName">
+    </div>
+    <div class="inputWrapper last">
+        <button id="btn1">Run stript</button>
+    </div>
+    <div class="inputWrapper last">
+        <button id="btn2" disabled>Save file</button>
+    </div>
 </div>
 <div class="content" id="left">
     <pre id="json">

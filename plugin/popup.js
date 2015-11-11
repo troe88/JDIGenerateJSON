@@ -1,7 +1,12 @@
+var saveButton;
+var java;
+
 $(document).ready(function () {
     chrome.storage.sync.clear()
 
     $("#btn1").on("click", run);
+    saveButton = $("#btn2");
+    saveButton.on("click", save);
     $('#po code').each(function (i, block) {
         hljs.highlightBlock(block);
     });
@@ -17,11 +22,12 @@ function getCBStatus(id) {
 }
 
 function run() {
+    java = [];
+    saveButton.prop("disabled", true);
     chrome.storage.sync.clear();
 
     chrome.storage.sync.set({
         "run": "yes",
-        "onlyMark": getCBStatus("#onlyMark"),
         "isMark": getCBStatus("#isMark")
     }, function () {
         console.log('run');
@@ -45,12 +51,39 @@ function run() {
     //    });
 }
 
+function save() {
+    saveResults();
+}
+
+var saveResults = function () {
+    var textInput = $("#fileName");
+    var text = textInput.val();
+
+    if(text.length === 0){
+        textInput.css("background-color", "#FFD1CC")
+    } else {
+        textInput.css("background-color", "white")
+        saveAsZip(java, text);
+    }
+}
+
+var displayJava = function(data) {
+    var str = "";
+    $.each(data, function (i, val) {
+       str += "//{0}\n{1}//!{2}\n\n".format(val.name.toUpperCase(), val.data, val.name.toUpperCase());
+    });
+    return str;
+}
+
 function paint(data) {
     $('#json').jsonViewer(data);
-    $('#po code').text(translateToJava(data));
+    java = translateToJava2(data);
+    $('#po code').text(displayJava(java));
     $('#po code').each(function (i, block) {
         hljs.highlightBlock(block);
     });
+    saveButton.prop("disabled", false);
+    //saveResults(java);
 }
 
 chrome.storage.onChanged.addListener(function (changes, namespace) {

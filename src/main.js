@@ -11,7 +11,7 @@ var IPage = "IPage"
 var IElement = "IElement"
 
 var options = {
-    onlyMark : "",
+    onlyMark : "false",
     isMark : ""
 };
 
@@ -146,7 +146,6 @@ chrome.storage.onChanged.addListener(function (changes, namespace) {
         switch (key) {
             case "run":
                 if(storageChange.newValue === "yes"){
-                    options.onlyMark = changes["onlyMark"].newValue;
                     options.isMark = changes["isMark"].newValue;
                     start();
                 }
