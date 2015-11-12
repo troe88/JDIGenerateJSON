@@ -5,7 +5,8 @@ var result = new Array;
 
 var Templates = {
     javaPage: function (package, imports, clazz) {
-        return "package {0}\n\n{1}\n{2}\n".format(package, imports, clazz)
+        var p = package === undefined ? "" : "package {0};\n\n".format(package);
+        return "{0}{1}\n{2};\n".format(p, imports, clazz)
     },
     imports: function (package) {
         return "import {0};\n".format(package);
@@ -74,11 +75,18 @@ var filesTemplate = {
             return "\n\tpublic {0} {1};\n".format(elem.type, elem.name.downFirstLetter());
         };
         //IncludesDictionary[data.type] = "my.package.{0}".format(data.type);
-        result.push(createRecord(new JavaClass(data)));
+        var c = new JavaClass(data);
+        c.includes.push(IncludesDictionary.by);
+        c.includes.push(IncludesDictionary.fundBy);
+        result.push(createRecord(c));
     },
     IPage: function (data) {
-        data.extendz = "IPage";
-        result.push(createRecord(new JavaClass(data)));
+        data.extendz = "Page";
+        var c = new JavaClass(data);
+        c.includes.push(IncludesDictionary.by);
+        c.includes.push(IncludesDictionary.fundBy);
+        c.includes.push(IncludesDictionary.Page);
+        result.push(createRecord(c));
     }
 };
 
@@ -86,14 +94,14 @@ var JavaClass = function (src) {
     this.name = src.name;
     this.extendz = src.extendz;
     this.includes = new Array;
-    this.package = "my.package;";
+    this.package = "qwe";
     this.elements = src.elements;
 
     this.genName = function (name) {
         return src.title === undefined ? src.name : src.title;
     };
     this.genIncludes = function () {
-        var inc = new Array;
+        var inc = this.includes;
         $.each(this.elements, function (i, val) {
             var temp = (IncludesDictionary[val.type] !== undefined) ? IncludesDictionary[val.type] : "";
             if (inc.indexOf(temp) < 0) {

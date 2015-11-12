@@ -3,18 +3,20 @@
  */
 
 var IncludesDictionary = {
-    ITextArea: "com.epam.jdi.textarea",
-    IButton: "com.epam.jdi.IButton",
+    ITextArea: "com.ggasoftware.jdiuitests.implementation.selenium.elements.interfaces.common.ITextArea",
+    IButton: "com.ggasoftware.jdiuitests.implementation.selenium.elements.interfaces.common.IButton",
     IForm: "com.epam.jdi.IForm",
-    IPagination: "com.epam.jdi.IPagination",
+    IPagination: "com.ggasoftware.jdiuitests.implementation.selenium.elements.composite.Pagination",
     ITimePicker: "com.epam.jdi.ITimePicker",
     IDatePicker: "com.epam.jdi.IDatePicker",
     IPage: "com.epam.jdi.IPage",
-    IElement: "com.epam.jdi.IElement",
-    ITextField: "com.epam.jdi.ITextField",
+    IElement: "com.ggasoftware.jdiuitests.implementation.selenium.elements.interfaces.base.IElement;",
+    ITextField: "com.ggasoftware.jdiuitests.implementation.selenium.elements.interfaces.common.ITextField",
     RFileInput: "com.epam.jdi.RFileInput",
     IRange: "com.epam.jdi.IRange",
-    String: "com.java.String"
+    Page : "com.ggasoftware.jdiuitests.implementation.selenium.elements.composite.Page",
+    by: "org.openqa.selenium.By;",
+    fundBy:"org.openqa.selenium.support.FindBy"
 }
 
 var ConvertToJavaType = {
