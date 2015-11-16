@@ -5,17 +5,17 @@
 var IncludesDictionary = {
     ITextArea: "com.ggasoftware.jdiuitests.implementation.selenium.elements.interfaces.common.ITextArea",
     IButton: "com.ggasoftware.jdiuitests.implementation.selenium.elements.interfaces.common.IButton",
-    IForm: "com.epam.jdi.IForm",
+    Form: "com.ggasoftware.jdiuitests.implementation.selenium.elements.composite.Form",
     IPagination: "com.ggasoftware.jdiuitests.implementation.selenium.elements.composite.Pagination",
-    ITimePicker: "com.epam.jdi.ITimePicker",
-    IDatePicker: "com.epam.jdi.IDatePicker",
-    IPage: "com.epam.jdi.IPage",
-    IElement: "com.ggasoftware.jdiuitests.implementation.selenium.elements.interfaces.base.IElement;",
+    ITimePicker: "/*com.epam.jdi.ITimePicker*/",
+    IDatePicker: "com.ggasoftware.jdiuitests.implementation.selenium.elements.interfaces.common.IDatePicker",
+    IPage: "import com.ggasoftware.jdiuitests.implementation.selenium.elements.composite.Page",
+    IElement: "com.ggasoftware.jdiuitests.implementation.selenium.elements.interfaces.base.IElement",
     ITextField: "com.ggasoftware.jdiuitests.implementation.selenium.elements.interfaces.common.ITextField",
-    RFileInput: "com.epam.jdi.RFileInput",
-    IRange: "com.epam.jdi.IRange",
+    RFileInput: "com.ggasoftware.jdiuitests.implementation.robot.elements.common.RFileInput",
+    IRange: "/*com.epam.jdi.IRange*/",
     Page : "com.ggasoftware.jdiuitests.implementation.selenium.elements.composite.Page",
-    by: "org.openqa.selenium.By;",
+    by: "org.openqa.selenium.By",
     fundBy:"org.openqa.selenium.support.FindBy"
 }
 
@@ -37,7 +37,7 @@ var FieldTemplates = {
     },
     ITextArea: simpleFileld,
     IButton: simpleFileld,
-    IForm: simpleFileld,
+    Form: simpleFileld,
     IPage: simpleFileld,
     IElement: simpleFileld,
     ITextField: simpleFileld,
@@ -45,7 +45,9 @@ var FieldTemplates = {
         return "\n\tpublic Pagination {0} = new Pagination({1}, {2}, {3}, {4}, {5});\n".format(
             elem.name, elem.get("template"), elem.get("next"), elem.get("prev"), elem.get("first"), elem.get("last")
         );
-    }
+    },
+    IDatePicker: simpleFileld,
+    RFileInput: simpleFileld,
 }
 
 var Pagination = function (element) {
@@ -68,7 +70,7 @@ var Pagination = function (element) {
 
 var FindByTemplates = {
     css: function (selector) {
-        return "\n\t@FindBy(css = \"jdi-name={0}\")\n".format(selector);
+        return "\n\t@FindBy(css = \"[jdi-name={0}]\")\n".format(selector);
     },
     byCss: function (selector) {
         return "\n\t\tBy.cssSelector(\"[jdi-name={0}]\")".format(selector);

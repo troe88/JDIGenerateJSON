@@ -2,6 +2,7 @@
  * Created by Dmitry_Lebedev1 on 9/11/2015.
  */
 var result = new Array;
+var pname;
 
 var Templates = {
     javaPage: function (package, imports, clazz) {
@@ -37,8 +38,8 @@ var ElemTemplates = {
     String: moduleSimple,
     ITextArea: moduleSimple,
     IButton: moduleSimple,
-    IForm: function (data) {
-        filesTemplate.IForm(data);
+    Form: function (data) {
+        filesTemplate.Form(data);
         return moduleSimple(data);
     },
     IPagination: function (data) {
@@ -54,7 +55,7 @@ var ElemTemplates = {
 }
 
 var filesTemplate = {
-    IForm: function (data) {
+    Form: function (data) {
         data.name = data.name.capitalizeFirstLetter();
         var genClass = JSON.parse(JSON.stringify(data));
         genClass.name = data.gen;
@@ -78,6 +79,7 @@ var filesTemplate = {
         var c = new JavaClass(data);
         c.includes.push(IncludesDictionary.by);
         c.includes.push(IncludesDictionary.fundBy);
+        c.includes.push(IncludesDictionary.Form);
         result.push(createRecord(c));
     },
     IPage: function (data) {
@@ -94,7 +96,7 @@ var JavaClass = function (src) {
     this.name = src.name;
     this.extendz = src.extendz;
     this.includes = new Array;
-    this.package = "qwe";
+    this.package = pname;
     this.elements = src.elements;
 
     this.genName = function (name) {
@@ -145,7 +147,8 @@ var processJSON = function (data) {
     filesTemplate[data.type](data);
 }
 
-function translateToJava2(data) {
+function translateToJava2(data, packagename) {
+    pname = packagename;
     result = new Array;
     processJSON(data);
     return result;

@@ -1,12 +1,15 @@
 var saveButton;
 var java;
 var textInput;
+var packageName;
 $(document).ready(function () {
     chrome.storage.sync.clear()
     textInput = $("#fileName");
     textInput.focus(function() {
         textInput.css("background-color", "white");
     });
+
+    packageName = $("#packageName");
 
     $("#btn1").on("click", run);
     saveButton = $("#btn2");
@@ -37,7 +40,7 @@ function run() {
     clear();
     chrome.storage.sync.set({
         "run": "yes",
-        "isMark": getCBStatus("#isMark")
+        "isMark": getCBStatus("#isMark"),
     }, function () {
         console.log('run');
     });
@@ -84,7 +87,7 @@ var displayJava = function(data) {
 
 function paint(data) {
     $('#json').jsonViewer(data);
-    java = translateToJava2(data);
+    java = translateToJava2(data, packageName.val());
     $('#po code').text(displayJava(java));
     $('#po code').each(function (i, block) {
         hljs.highlightBlock(block);

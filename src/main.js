@@ -12,7 +12,7 @@ var IElement = "IElement"
 
 var options = {
     onlyMark : "false",
-    isMark : ""
+    isMark : "",
 };
 
 var Utils = {
