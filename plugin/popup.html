@@ -6,10 +6,9 @@
     <script src="../libs/json-viewer/jquery.json-viewer.js"></script>
     <link rel="stylesheet" href="../libs/json-viewer/jquery.json-viewer.css"/>
     <!--<meta name="viewport" content="width=device-width, initial-scale=1.0">-->
-    <!--<script src="../libs/bootstrap/js/bootstrap.min.js"></script>-->
-    <!--<link href="../libs/bootstrap/css/bootstrap.css" rel="stylesheet" media="screen">-->
+    <script src="../libs/bootstrap/js/bootstrap.min.js"></script>
+    <link href="../libs/bootstrap/css/bootstrap.css" rel="stylesheet" media="screen">
     <link rel="stylesheet" href="popup.css"/>
-    <script src="popup.js"></script>
     <script src="toJava.js"></script>
     <script src="helper.js"></script>
     <script src="toJava2.js"></script>
@@ -21,37 +20,45 @@
     <script src="../libs/jszip.js"></script>
     <script src="../libs/FileSaver.js"></script>
     <script src="saveAsZip.js"></script>
+    <script src="popupHelper.js"></script>
+    <script src="popup2.js"></script>
 </head>
 <body>
-<div id="inputModule">
-    <div class="inputWrapper">
-        <label>Added elements will be painted</label>
-        <input type="checkbox" id="isMark">
+<div class="container">
+    <form role="form">
+        <div class="checkbox">
+            <label><input type="checkbox">Paint it!</label>
+        </div>
+        <div class="form-group">
+            <label for="packageName">Package name:</label>
+            <input type="text" class="form-control" id="packageName" placeholder="Enter package name">
+        </div>
+        <div class="form-group">
+            <div class="form-group input-append">
+                <label for="fileName">Archive name:</label>
+                <input type="password" class="form-control" id="fileName" placeholder="Enter archive name">
+                <span class="add-on">.zip</span>
+            </div>
+        </div>
+        <div class="btn-group" role="group">
+            <button type="button" class="btn btn-default" id="generate">Generate</button>
+            <button type="button" class="btn btn-default disabled" id="save">Save</button>
+        </div>
+    </form>
+    <div class="contentContainer">
+        <ul class="nav nav-tabs strTabs">
+            <li id="json" role="presentation"><a href="#">Json</a></li>
+            <li id="java" role="presentation"><a href="#">Java</a></li>
+        </ul>
+        <div id="jsonStr" class="strContainer">
+            <pre id="jsonContainer"></pre>
+        </div>
+        <div id="javaStr" class="strContainer">
+        <pre>
+            <code class="hljs" id="myCode"> </code>
+        </pre>
+        </div>
     </div>
-    <div class="inputWrapper">
-        <label>Result ZIP archive name</label>
-        <input type="fileName" id="fileName" placeholder="fileName">
-    </div>
-    <div class="inputWrapper">
-        <label>Package name</label>
-        <input type="packageName" id="packageName" placeholder="com.corp.tests">
-    </div>
-    <div class="inputWrapper last">
-        <button id="btn1">Run stript</button>
-    </div>
-    <div class="inputWrapper last">
-        <button id="btn2" disabled>Save file</button>
-    </div>
-</div>
-<div class="content" id="left">
-    <pre id="json">
-    </pre>
-</div>
-<div class="content" id="right">
-    <pre id="po">
-        <code class="hljs" id="myCode">
-        </code>
-    </pre>
 </div>
 </body>
 </html>

@@ -87,7 +87,6 @@ var displayJava = function(data) {
 
 function paint(data) {
     $('#json').jsonViewer(data);
-    java = translateToJava2(data, packageName.val());
     $('#po code').text(displayJava(java));
     $('#po code').each(function (i, block) {
         hljs.highlightBlock(block);

@@ -1,78 +1,25 @@
 body {
     /*height: 800px;*/
-    width: 650px;
+    width: 550px;
     display: inline-block;
 }
 
-.content {
-    float: left;
-    border: 1px solid black;
-    width: 49.0%;
-    height: 100%;
-}
-
-#myCode {
-    display: block;
-    height: 100%;
-}
-
-#right:before {
-    content: "pageObject.java";
-}
-
-#left:before {
-    content: "JSON";
-}
-
-#right:before, #left:before {
-    border-bottom: 1px solid black;
-    display: block;
-    padding: 5px;
-}
-
-#right {
-    background-color: #f0f0f0;
-    float: right;
-    margin: 0px 0px 0px 5px;
-}
-
-#left {
-    background-color: bisque;
-    float: left;
-}
 pre {
     display: block;
-    padding: 15px;
-    font-weight: bolder;
-    height: 100%;
+    padding-left: 25px;
+    background-color: #f0f0f0;
 }
 
-.inputWrapper {
-    margin: 5px;
+code {
+    display: block;
+    background-color: #f0f0f0;
 }
 
-#inputModule {
+.container {
     width: 100%;
-    float: left;
-    margin: 0px 0px 5px 0px;
-    border: 1px solid black;
+    padding: 2%;
 }
 
-#inputModule label {
-    float: left;
-    width: 210px;
-}
-
-#inputModule .last:before {
-    content: "";
-    position: absolute;
-    border-bottom: 1px solid black;
-    top: 93px;
-    left: 8px;
-    width: 651px;
-}
-
-#inputModule .last {
-    margin: 10px 5px 5px 5px;
-    float: left;
+.contentContainer {
+    width: 96%;
 }
