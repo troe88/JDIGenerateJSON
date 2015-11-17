@@ -147,8 +147,8 @@ var processJSON = function (data) {
     filesTemplate[data.type](data);
 }
 
-function translateToJava2(data, packagename) {
-    pname = packagename;
+function translateToJava2(data) {
+    pname = data.packageName;
     result = new Array;
     processJSON(data);
     return result;

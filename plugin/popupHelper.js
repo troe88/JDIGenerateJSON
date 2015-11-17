@@ -2,7 +2,9 @@
  * Created by Dmitry_Lebedev1 on 16/11/2015.
  */
 
-var containerList = function () {
+var containerList = function (mainContainer) {
+    this.javaArray = undefined;
+    this.mainContainer = mainContainer;
     this.elems = [];
     this.active = undefined;
     this.add = function (element) {
@@ -13,14 +15,18 @@ var containerList = function () {
         });
         this.elems.push(element);
     }
+    this.vanish = function () {
+        this.mainContainer.css("display", "none");
+    };
+    this.emerge = function () {
+        this.mainContainer.css("display", "block");
+    };
     this.on = function (name, container) {
         var local = container === undefined ? this : container;
 
         if (local.active !== undefined)
             if (local.active.name === name)
                 return;
-
-        console.log(name);
         var localElems = local.elems;
         var active;
         $.each(localElems, function (i, val) {
@@ -32,8 +38,37 @@ var containerList = function () {
         });
         local.active = active;
         local.active.on();
-    }
+    };
+    this.paintJava = function(java){
+        var data = translateToJava2($.parseJSON(java))
+        this.javaArray = data;
+        $.each(this.elems, function (i, val) {
+            if (val.name === "java") {
+                val.container.children().text(getJavaStr(data));
+                val.container.each(function (i, block) {
+                    hljs.highlightBlock(block);
+                });
+            }
+        });
+    };
+    this.paintJSON = function(json){
+        var data = $.parseJSON(json)
+        console.log("paint JSON")
+        $.each(this.elems, function (i, val) {
+            if (val.name === "json") {
+                val.container.children().jsonViewer(data);
+            }
+        });
+    };
 }
+
+getJavaStr = function(data){
+    var str = "";
+    $.each(data, function (i, val) {
+        str += "//{0}\n{1}//!{2}\n\n".format(val.name.toUpperCase(), val.data, val.name.toUpperCase());
+    });
+    return str;
+};
 
 function getCBStatus(id) {
     return $(id).is(':checked');

@@ -1,105 +1,118 @@
 /**
  * Created by Dmitry_Lebedev1 on 16/11/2015.
  */
+var popup;
+$(document).ready(function () {
+    popup = {
+        java: [],
+        saveButton: $("#save"),
+        genButton: $("#generate"),
+        packageName: $("#packageName"),
+        archiveName: $("#fileName"),
+        is_mark: $("#isMark"),
+        cl: (function () {
+            var cl_temp = new containerList($('[class=contentContainer]'));
+            cl_temp.add(new dataTabContainer("java", $("[id=java]"), $("[id=javaStr]")));
+            cl_temp.add(new dataTabContainer("json", $("[id=json]"), $("[id=jsonStr]")));
+            cl_temp.on("java");
+            return cl_temp;
+        })(),
+        checkPackageName: function () {
+            var val = popup.packageName.val();
+            if (val.length === 0)
+                return false;
+            return true;
+        },
+        checkArchiveName: function () {
+            var val = popup.archiveName.val();
+            if (val.length === 0)
+                return false;
+            return true;
+        },
+        makeRed: function (elem) {
+            elem.css("background-color", "#FFD1CC");
+        },
+        makeWhite: function () {
+            $(event.target).css("background-color", "white");
+        },
+        isMark: function () {
+            return getCBStatus(popup.is_mark);
+        },
+        sbDisabled: function () {
+            popup.saveButton.addClass("disabled");
+        },
+        sbEnabled: function () {
+            popup.saveButton.removeClass("disabled");
+        },
+        clear: function () {
+            java = [];
+            popup.sbDisabled();
+        },
+        save: function () {
+            if (popup.saveButton.hasClass("disabled"))
+                return;
+            if (!popup.checkArchiveName()) {
+                popup.makeRed(popup.archiveName);
+                return;
+            }
+            saveAsZip(popup.cl.javaArray, popup.archiveName.val());
+        },
+        run: function () {
+            popup.clear();
+            if (!popup.checkPackageName()) {
+                popup.makeRed(popup.packageName);
+                return;
+            }
+            chrome.storage.sync.clear();
+            chrome.storage.sync.set({
+                "isMark": popup.isMark(),
+                "packageName" : popup.packageName.val(),
+            }, function () {
+                console.log('RUN');
+            });
+            popup.sbEnabled();
+            popup.cl.emerge();
+        },
+        paint:function(){
 
-var saveButton;
-var java;
-var textInput;
-var packageName;
-var contentContainer;
-
-var initTabs = function() {
-    contentContainer = $('[class=contentContainer]');
-    contentContainer.css("display", "none");
-    var cl = new containerList();
-    cl.add(new dataTabContainer("java", $("[id=java]"), $("[id=javaStr]")));
-    cl.add(new dataTabContainer("json", $("[id=json]"), $("[id=jsonStr]")));
-    cl.on("json")
-}
-
-function save() {
-    if(saveButton.hasClass("disabled"))
-        return;
-    saveResults();
-}
-
-var saveResults = function () {
-    var text = textInput.val();
-
-    if(text.length === 0){
-        textInput.css("background-color", "#FFD1CC")
-    } else {
-        saveAsZip(java, text);
-    }
-}
-
-var displayJava = function(data) {
-    var str = "";
-    $.each(data, function (i, val) {
-        str += "//{0}\n{1}//!{2}\n\n".format(val.name.toUpperCase(), val.data, val.name.toUpperCase());
-    });
-    return str;
-}
-
-function paint(data) {
-    $('#jsonContainer').jsonViewer(data);
-    java = translateToJava2(data, packageName.val());
-    $('#myCode').text(displayJava(java));
-    $('#myCode').each(function (i, block) {
-        hljs.highlightBlock(block);
-    });
-}
-
-chrome.storage.onChanged.addListener(function (changes, namespace) {
-    for (key in changes) {
-        switch (key) {
-            case "value":
-                var data = changes[key].newValue;
-                if (data !== undefined) {
-                    paint($.parseJSON(data));
-                }
-                break;
+        },
+        prepCodeBlock: function () {
+            $('#myCode').each(function (i, block) {
+                hljs.highlightBlock(block);
+            });
+        },
+        collBack: function () {
+            popup.genButton.on("click", popup.run);
+            popup.saveButton.on("click", popup.save);
+            popup.archiveName.focus(popup.makeWhite);
+            popup.packageName.focus(popup.makeWhite);
+        },
+        init: function () {
+            popup.collBack();
+            popup.prepCodeBlock();
+            popup.cl.vanish();
         }
     }
-});
 
-var clear = function() {
-    java = [];
-    saveButton.addClass("disabled");
-    textInput.css("background-color", "white")
-}
+    chrome.storage.sync.clear();
+    popup.init();
 
-function run() {
-    clear();
-    chrome.storage.sync.set({
-        "run": "yes",
-        "isMark": getCBStatus("#isMark"),
-    }, function () {
-        console.log('run');
-    });
-    saveButton.removeClass("disabled");
-    contentContainer.css("display", "block");
-}
-
-$(document).ready(function () {
-    initTabs();
-    chrome.storage.sync.clear()
-    textInput = $("#fileName");
-    textInput.focus(function() {
-        textInput.css("background-color", "white");
-    });
-
-    packageName = $("#packageName");
-
-    $("#generate").on("click", run);
-    saveButton = $("#save");
-    saveButton.on("click", save);
-    $('#myCode').each(function (i, block) {
-        hljs.highlightBlock(block);
-    });
-
-    chrome.tabs.query({ currentWindow: true, active: true }, function (tabs) {
+    chrome.tabs.query({currentWindow: true, active: true}, function (tabs) {
         chrome.tabs.executeScript(tabs[0].id, {file: "src/main.js"}, function () {
         });
+    });
+
+    chrome.storage.onChanged.addListener(function (changes, namespace) {
+        for (key in changes) {
+            switch (key) {
+                case "value":
+                    var data = changes[key].newValue;
+                    if (data !== undefined) {
+                        popup.cl.paintJSON(data);
+                        popup.cl.paintJava(data);
+                    }
+                    break;
+            }
+        }
     });
 });

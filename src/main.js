@@ -13,6 +13,7 @@ var IElement = "IElement"
 var options = {
     onlyMark : "false",
     isMark : "",
+    packageName : "",
 };
 
 var Utils = {
@@ -61,6 +62,7 @@ function start() {
         url: document.URL,
         title: document.title,
         type: IPage,
+        packageName: options.packageName,
         elements: getPageElements(elements)
     };
 
@@ -141,14 +143,14 @@ function getElementsArray(tmpContainer, findRule) {
 
 
 chrome.storage.onChanged.addListener(function (changes, namespace) {
+    console.log("qwe")
     for (key in changes) {
         var storageChange = changes[key];
         switch (key) {
-            case "run":
-                if(storageChange.newValue === "yes"){
-                    options.isMark = changes["isMark"].newValue;
-                    start();
-                }
+            case "packageName":
+                options.isMark = changes["isMark"].newValue;
+                options.packageName = changes["packageName"].newValue;
+                start();
                 break;
         }
     }
