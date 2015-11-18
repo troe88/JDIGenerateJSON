@@ -1,6 +1,6 @@
 body {
     /*height: 800px;*/
-    width: 1550px;
+    width: 1000px;
     display: inline-block;
 }
 
@@ -26,7 +26,6 @@ code {
 
 #right {
     float: left;
-    background-color: honeydew;
     margin-left: 50px;
     margin-top: 5px;
 }
@@ -36,5 +35,5 @@ code {
 }
 
 textarea {
-    min-width: 380px;
+    min-width: 600px;
 }

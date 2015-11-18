@@ -31,7 +31,7 @@ var Utils = {
 function saveChanges(data) {
     if (!data) {
         console.log('Error: No value specified');
-        data = "texzt";
+        data = "";
         return;
     }
 
@@ -69,7 +69,8 @@ function start() {
     //process(page);
     //openResultsWindow(page, filesArray);
 
-    saveChanges(page);
+    //saveChanges(page);
+    return JSON.stringify(page);
 }
 
 function getPageElements(elements) {
@@ -115,7 +116,7 @@ function removeAllChildren(arr) {
     }
     return res;
 }
-
+console.log("DIMA START");
 
 function getElementData(tmpElem) {
     return temp = {
@@ -142,15 +143,34 @@ function getElementsArray(tmpContainer, findRule) {
 }
 
 chrome.storage.onChanged.addListener(function (changes, namespace) {
-    console.log("qwe")
     for (key in changes) {
-        var storageChange = changes[key];
         switch (key) {
-            case "packageName":
-                options.isMark = changes["isMark"].newValue;
-                options.packageName = changes["packageName"].newValue;
-                start();
+            case "val1":
+                console.log("val1")
+                chrome.runtime.sendMessage(
+                    {name: "p1", data: start()}
+                );
+                break;
+            case "val2":
+                console.log("val2")
+                chrome.runtime.sendMessage(
+                    {name: "p2", data: "p2: " + Math.random()}
+                );
                 break;
         }
     }
 });
+
+//chrome.storage.onChanged.addListener(function (changes, namespace) {
+//    console.log("qwe")
+//    for (key in changes) {
+//        var storageChange = changes[key];
+//        switch (key) {
+//            case "packageName":
+//                options.isMark = changes["isMark"].newValue;
+//                options.packageName = changes["packageName"].newValue;
+//                start();
+//                break;
+//        }
+//    }
+//});

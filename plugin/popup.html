@@ -21,6 +21,7 @@
     <script src="saveAsZip.js"></script>
     <script src="popupHelper.js"></script>
     <script src="popup.js"></script>
+    <script src="Log.js"></script>
 </head>
 <body>
 <div id="left">
@@ -63,9 +64,10 @@
 </div>
 <div id="right">
     <div class="form-group">
-        <label for="comment">Log:</label>
-        <textarea class="form-control" col rows="5" id="comment"></textarea>
+        <label for="log">Log:</label>
+        <textarea class="form-control" rows="5" id="log"></textarea>
     </div>
+    <button type="button" id="clear" class="btn btn-default">Clear log</button>
 </div>
 </body>
 </html>

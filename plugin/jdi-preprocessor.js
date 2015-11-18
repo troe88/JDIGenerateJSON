@@ -2,7 +2,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-chrome.devtools.panels.create("JDI Page Objects",
+chrome.devtools.panels.create("DIMA",
     null,
     "plugin/popup.html",
     function(panel) {}

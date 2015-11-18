@@ -5,6 +5,17 @@
   "version": "1.0",
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "devtools_page": "plugin/jdi-preprocessor.html",
+  "background": {
+    "matches": [
+      "http://*/*",
+      "https://*/*"
+    ],
+    "scripts": [
+      "libs/jquery-2.1.4.js",
+      "libs/string.format-1.0.packed.js",
+      "plugin/background.js"
+    ]
+  },
   "content_scripts": [
     {
       "matches": [
@@ -12,11 +23,10 @@
         "https://*/*"
       ],
       "js": [
-        "src/content.js",
-        "libs/cookie.js",
         "libs/jquery-2.1.4.js",
         "libs/json-viewer/jquery.json-viewer.js",
-        "libs/string.format-1.0.packed.js"
+        "libs/string.format-1.0.packed.js",
+        "src/content.js"
       ]
     }
   ],
