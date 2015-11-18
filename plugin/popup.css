@@ -1,6 +1,6 @@
 body {
     /*height: 800px;*/
-    width: 550px;
+    width: 1550px;
     display: inline-block;
 }
 
@@ -22,4 +22,19 @@ code {
 
 .contentContainer {
     width: 96%;
+}
+
+#right {
+    float: left;
+    background-color: honeydew;
+    margin-left: 50px;
+    margin-top: 5px;
+}
+
+#left {
+    float: left;
+}
+
+textarea {
+    min-width: 380px;
 }

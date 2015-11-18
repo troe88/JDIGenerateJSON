@@ -11,9 +11,9 @@ var IPage = "IPage"
 var IElement = "IElement"
 
 var options = {
-    onlyMark : "false",
-    isMark : "",
-    packageName : "",
+    onlyMark: "false",
+    isMark: "",
+    packageName: "",
 };
 
 var Utils = {
@@ -140,7 +140,6 @@ function getElementData(tmpElem) {
 function getElementsArray(tmpContainer, findRule) {
     return Array.prototype.slice.call(tmpContainer.querySelectorAll(findRule));
 }
-
 
 chrome.storage.onChanged.addListener(function (changes, namespace) {
     console.log("qwe")

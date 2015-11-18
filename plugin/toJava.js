@@ -1,110 +1,155 @@
-var filesArray = [];
+/**
+ * Created by Dmitry_Lebedev1 on 9/11/2015.
+ */
+var result = new Array;
+var pname;
 
-function removeSpaces(str) {
-    return str.replace(/\s+/g, '_');
-}
-
-var templates = {
-    ITextArea: "",
-    IButton: "",
-    IForm: "\nclass {0} extends IForm<{2}> {\n{1}}",
-    IPage: "\nclass {0} extends IPage {\n{1}}",
-    IElement: "",
-    ITextField: "",
-    simpleClass: "\nclass {0} {\n{1}\n}",
-    IPagination: "public Pagination {0} = new Pagination({1});\n",
-    cfw: "\t@FindBy(css = \"[jdi-name={1}]\")\n\tpublic {0} {1};\n\n",
-    cf: "\t{0} {1};\n",
-    fbcss: "\n\t{0},\n\t{1},\n\t{2},\n\t{3},\n\t{4}",
-    css: "By.cssSelector(\"[jdi-name={0}]\")"
-};
-
-var genFieldFormClass = {
-    ITextArea: function (data) {
-        return templates.cf.format("String", data.name)
+var Templates = {
+    javaPage: function (package, imports, clazz) {
+        var p = package === undefined ? "" : "package {0};\n\n".format(package);
+        return "{0}{1}\n{2};\n".format(p, imports, clazz)
     },
-    IButton: "",
-    IForm: "",
-    IPage: "",
-    IElement: "",
-    ITextField: function (data) {
-        return templates.cf.format("String", data.name)
+    imports: function (package) {
+        return "import {0};\n".format(package);
     },
+    javaClass: function (name, elements) {
+        return "public class {0}  {\n{1}\n}".format(name, elements);
+    },
+    javaClassExtends: function (name, extendz, elements) {
+        return "public class {0} extends {1} {\n{2}\n}".format(name, extendz, elements);
+    },
+    classField: function (elem) {
+        var name = elem.name;
+        var type = elem.type;
+        try {
+            return FieldTemplates[type](elem);
+        } catch (e) {
+            console.log(e + "\n" + "type: " + type + " name: " + name)
+            return FieldTemplates.unknown.format(type, name);
+        }
+    }
 }
 
-var moduleSimple = function (data) {
-    return templates.cfw.format(data.type, data.name);
+var moduleSimple = function (elem) {
+    return Templates.classField(elem);
 }
 
-var modelGenField = {
+var ElemTemplates = {
+    String: moduleSimple,
     ITextArea: moduleSimple,
     IButton: moduleSimple,
-    IForm: function (data) {
-        process(data);
-        return templates.cfw.format(data.name, "form");
+    Form: function (data) {
+        filesTemplate.Form(data);
+        return moduleSimple(data);
     },
     IPagination: function (data) {
-        var elems = [];
-        var get = function (key) {
-            return (elems[key] === undefined) ? "null" : templates.css.format(elems[key].name)
-        };
-        $.each(data.elements, function (index, value) {
-            elems[value.name] = value;
-        });
-        return templates.IPagination.format(data.name, templates.fbcss.format(
-            get('template'), get('next'), get('prev'), get('first'), get('last')
-        ));
+        return new Pagination(data).print();
     },
     ITimePicker: moduleSimple,
     IDatePicker: moduleSimple,
     IPage: undefined,
     IElement: moduleSimple,
     ITextField: moduleSimple,
-    RFileInput : moduleSimple,
-    IRange : moduleSimple,
-};
+    RFileInput: moduleSimple,
+    IRange: moduleSimple,
+}
 
-var modelComposite = {
-    IForm: function (data) {
-        filesArray.push(templates[data.type].format(data.name, getDataFromElements(data.elements), data.gen));
-        filesArray.push(templates.simpleClass.format(data.gen, genGenClassForm(data.elements)));
+var filesTemplate = {
+    Form: function (data) {
+        data.name = data.name.capitalizeFirstLetter();
+        var genClass = JSON.parse(JSON.stringify(data));
+        genClass.name = data.gen;
+        genClass.type = undefined;
+        genClass.extendz = undefined;
+        $.each(genClass.elements, function (i, val) {
+            if (ConvertToJavaType[val.type] !== undefined) {
+                val.type = ConvertToJavaType[val.type];
+            } else {
+                val.type += " ";
+            }
+        });
+        result.push(createRecord(new JavaClass(genClass)));
+        //
+        data.extendz = "{0}<{1}>".format(data.type, data.gen);
+        data.type = data.name;
+        FieldTemplates[data.type] = function (elem) {
+            return "\n\tpublic {0} {1};\n".format(elem.type, elem.name.downFirstLetter());
+        };
+        //IncludesDictionary[data.type] = "my.package.{0}".format(data.type);
+        var c = new JavaClass(data);
+        c.includes.push(IncludesDictionary.by);
+        c.includes.push(IncludesDictionary.fundBy);
+        c.includes.push(IncludesDictionary.Form);
+        result.push(createRecord(c));
     },
     IPage: function (data) {
-        filesArray.push(templates[data.type].format(removeSpaces(data.title), getDataFromElements(data.elements)));
+        data.extendz = "Page";
+        var c = new JavaClass(data);
+        c.includes.push(IncludesDictionary.by);
+        c.includes.push(IncludesDictionary.fundBy);
+        c.includes.push(IncludesDictionary.Page);
+        result.push(createRecord(c));
     }
 };
 
-function getDataFromElements(elements) {
-    var res = ""
-    $.each(elements, function (index, value) {
-        try {
-            res += modelGenField[value.type](value);
-        } catch (e) {
-            console.log(e)
-        }
-    });
-    return res;
+var JavaClass = function (src) {
+    this.name = src.name;
+    this.extendz = src.extendz;
+    this.includes = new Array;
+    this.package = pname;
+    this.elements = src.elements;
+
+    this.genName = function (name) {
+        return src.title === undefined ? src.name : src.title;
+    };
+    this.genIncludes = function () {
+        var inc = this.includes;
+        $.each(this.elements, function (i, val) {
+            var temp = (IncludesDictionary[val.type] !== undefined) ? IncludesDictionary[val.type] : "";
+            if (inc.indexOf(temp) < 0) {
+                inc.push(temp);
+            }
+        });
+        this.includes = inc;
+    };
+    this.getIncludes = function () {
+        var total = "";
+        $.each(this.includes, function (i, val) {
+            total += val.length > 0 ? Templates.imports(val) : "";
+        });
+        return total;
+    };
+    this.getElements = function () {
+        var total = "";
+        $.each(this.elements, function (i, val) {
+            try {
+                total += ElemTemplates[val.type](val);
+            } catch (e) {
+                total += "\t/*{0} {1}*/\n".format(val.type, val.name);
+            }
+        });
+        return total;
+    };
+    this.genClass = function () {
+        var elements = this.getElements();
+        this.genIncludes();
+        return (this.extendz === null || this.extendz === undefined) ? Templates.javaClass(this.name, elements) : Templates.javaClassExtends(this.name, this.extendz, elements);
+    };
+    this.print = function () {
+        var clazz = this.genClass();
+        return Templates.javaPage(this.package, this.getIncludes(), clazz);
+    };
+
+    this.name = this.genName(src.name);
+};
+
+var processJSON = function (data) {
+    filesTemplate[data.type](data);
 }
 
-function genGenClassForm(elements) {
-    var res = ""
-    $.each(elements, function (index, value) {
-        try {
-            res += genFieldFormClass[value.type](value);
-        } catch (e) {
-            console.log(e)
-        }
-    });
-    console.log(res)
-    return res;
-}
-
-function process(data) {
-    modelComposite[data.type](data);
-}
-
-function translateToJava(data) {
-    filesArray = new Array;
-    modelComposite[data.type](data);
-    return filesArray;
+function translateToJava2(data) {
+    pname = data.packageName;
+    result = new Array;
+    processJSON(data);
+    return result;
 }

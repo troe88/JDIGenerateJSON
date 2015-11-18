@@ -9,9 +9,8 @@
     <script src="../libs/bootstrap/js/bootstrap.min.js"></script>
     <link href="../libs/bootstrap/css/bootstrap.css" rel="stylesheet" media="screen">
     <link rel="stylesheet" href="popup.css"/>
-    <script src="toJava.js"></script>
     <script src="helper.js"></script>
-    <script src="toJava2.js"></script>
+    <script src="toJava.js"></script>
     <script src="../libs/string.format-1.0.packed.js"></script>
     <link rel="stylesheet" href="../libs/highlight/styles/default.css">
     <script src="../libs/highlight/highlight.pack.js"></script>
@@ -21,43 +20,51 @@
     <script src="../libs/FileSaver.js"></script>
     <script src="saveAsZip.js"></script>
     <script src="popupHelper.js"></script>
-    <script src="popup2.js"></script>
+    <script src="popup.js"></script>
 </head>
 <body>
-<div class="container">
-    <form role="form">
-        <div class="checkbox">
-            <label><input type="checkbox">Paint it!</label>
-        </div>
-        <div class="form-group">
-            <label for="packageName">Package name:</label>
-            <input type="text" class="form-control" id="packageName" placeholder="Enter package name">
-        </div>
-        <div class="form-group">
-            <div class="form-group input-append">
-                <label for="fileName">Archive name:</label>
-                <input type="text" class="form-control" id="fileName" placeholder="Enter archive name">
-                <span class="add-on">.zip</span>
+<div id="left">
+    <div class="container">
+        <form role="form">
+            <div class="checkbox" style="display: none">
+                <label><input type="checkbox">Paint it!</label>
             </div>
-        </div>
-        <div class="btn-group" role="group">
-            <button type="button" class="btn btn-default" id="generate">Generate</button>
-            <button type="button" class="btn btn-default disabled" id="save">Save</button>
-        </div>
-    </form>
-    <div class="contentContainer">
-        <ul class="nav nav-tabs strTabs">
-            <li id="json" role="presentation"><a href="#">Json</a></li>
-            <li id="java" role="presentation"><a href="#">Java</a></li>
-        </ul>
-        <div id="jsonStr" class="strContainer">
-            <pre id="jsonContainer"></pre>
-        </div>
-        <div id="javaStr" class="strContainer">
+            <div class="form-group">
+                <label for="packageName">Package name:</label>
+                <input type="text" class="form-control" id="packageName" placeholder="Enter package name">
+            </div>
+            <div class="form-group">
+                <div class="form-group input-append">
+                    <label for="fileName">Archive name:</label>
+                    <input type="text" class="form-control" id="fileName" placeholder="Enter archive name">
+                    <span class="add-on">.zip</span>
+                </div>
+            </div>
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-default" id="generate">Generate</button>
+                <button type="button" class="btn btn-default disabled" id="save">Save</button>
+            </div>
+        </form>
+        <div class="contentContainer">
+            <ul class="nav nav-tabs strTabs">
+                <li id="json" role="presentation"><a href="#">Json</a></li>
+                <li id="java" role="presentation"><a href="#">Java</a></li>
+            </ul>
+            <div id="jsonStr" class="strContainer">
+                <pre id="jsonContainer"></pre>
+            </div>
+            <div id="javaStr" class="strContainer">
         <pre>
             <code class="hljs" id="myCode"></code>
         </pre>
+            </div>
         </div>
+    </div>
+</div>
+<div id="right">
+    <div class="form-group">
+        <label for="comment">Log:</label>
+        <textarea class="form-control" col rows="5" id="comment"></textarea>
     </div>
 </div>
 </body>
