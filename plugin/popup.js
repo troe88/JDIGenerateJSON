@@ -71,13 +71,13 @@ $(document).ready(function () {
                     log.msg("Fill package name.")
                     return;
                 }
-                chrome.storage.sync.clear();
-                chrome.storage.sync.set({
-                    "isMark": popup.isMark(),
-                    "packageName": popup.packageName.val(),
-                }, function () {
-                    console.log('RUN');
-                });
+                chrome.runtime.sendMessage(
+                    {
+                        name: "val1", data: {
+                        "isMark": popup.isMark(),
+                        "packageName": popup.packageName.val(),
+                    }
+                    });
                 popup.sbEnabled();
                 popup.cl.emerge();
             },
@@ -91,12 +91,16 @@ $(document).ready(function () {
             },
             testFunc: function () {
                 chrome.runtime.sendMessage(
-                    {name: "val1", data: Math.random()}
+                    {
+                        name: "val1", data: {
+                        "isMark": popup.isMark(),
+                        "packageName": popup.packageName.val(),
+                    }
+                    }
                 );
             },
             collBack: function () {
-                //popup.genButton.on("click", popup.run);
-                popup.genButton.on("click", popup.testFunc);
+                popup.genButton.on("click", popup.run);
                 popup.saveButton.on("click", popup.save);
                 popup.archiveName.focus(popup.makeWhite);
                 popup.packageName.focus(popup.makeWhite);
@@ -108,7 +112,6 @@ $(document).ready(function () {
             }
         }
 
-        chrome.storage.sync.clear();
         popup.init();
 
         //chrome.runtime.sendMessage(
@@ -124,10 +127,10 @@ $(document).ready(function () {
             for (key in changes) {
                 switch (key) {
                     case "p1":
-                       log.msg("p1: " + changes["p1"].newValue);
-                        //var data = changes[key].newValue;
-                        //popup.cl.paintJSON(data);
-                        //popup.cl.paintJava(data);
+                        var data = changes[key].newValue;
+                        log.msg("Data received");
+                        popup.cl.paintJSON(data);
+                        popup.cl.paintJava(data);
                         break;
                     case "p2":
                         log.msg.text("p2: " + changes["p2"].newValue);

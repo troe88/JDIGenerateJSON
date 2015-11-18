@@ -20,7 +20,7 @@ chrome.runtime.onMessage.addListener(
                 chrome.storage.local.set({'p2': request.data});
                 break;
             default :
-                alert("error")
+                alert("error");
         }
     });
 

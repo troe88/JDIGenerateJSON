@@ -147,6 +147,9 @@ chrome.storage.onChanged.addListener(function (changes, namespace) {
         switch (key) {
             case "val1":
                 console.log("val1")
+                options.packageName = changes[key].newValue.packageName;
+                options.isMark = changes[key].newValue.isMark;
+                chrome.storage.sync.clear();
                 chrome.runtime.sendMessage(
                     {name: "p1", data: start()}
                 );
