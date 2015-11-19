@@ -1,0 +1,22 @@
+{
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string"
+    },
+    "packageName": {
+      "type": "string"
+    },
+    "elements": {
+      "$ref": "element.json"
+    }
+  }
+}

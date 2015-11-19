@@ -125,7 +125,8 @@ function getElementData(tmpElem) {
         parent: (tmpElem.hasAttribute(jdi_parent)) ? tmpElem.getAttribute(jdi_parent) : undefined,
         gen: (tmpElem.hasAttribute(jdi_gen)) ? tmpElem.getAttribute(jdi_gen) : undefined,
         elements: [],
-        // locator : "[" + jdi_name + "='" + tmpElem.getAttribute(jdi_name) + "']",
+        //locator : "[" + jdi_name + "='" + tmpElem.getAttribute(jdi_name) + "']",
+        locator : tmpElem.getAttribute(jdi_name),
         toJSON: function () {
             return {
                 name: this.name,

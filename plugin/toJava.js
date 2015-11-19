@@ -21,6 +21,7 @@ var Templates = {
     classField: function (elem) {
         var name = elem.name;
         var type = elem.type;
+        var locator = elem.locator;
         try {
             return FieldTemplates[type](elem);
         } catch (e) {

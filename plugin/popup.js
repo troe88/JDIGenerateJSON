@@ -14,6 +14,7 @@ $(document).ready(function () {
             packageName: $("#packageName"),
             archiveName: $("#fileName"),
             is_mark: $("#isMark"),
+            clearLog: $("[id=clear]"),
             cl: (function () {
                 var cl_temp = new containerList($('[class=contentContainer]'));
                 cl_temp.add(new dataTabContainer("java", $("[id=java]"), $("[id=javaStr]")));
@@ -89,19 +90,13 @@ $(document).ready(function () {
                     hljs.highlightBlock(block);
                 });
             },
-            testFunc: function () {
-                chrome.runtime.sendMessage(
-                    {
-                        name: "val1", data: {
-                        "isMark": popup.isMark(),
-                        "packageName": popup.packageName.val(),
-                    }
-                    }
-                );
+            clear: function () {
+                log.clear();
             },
             collBack: function () {
                 popup.genButton.on("click", popup.run);
                 popup.saveButton.on("click", popup.save);
+                popup.clearLog.on("click", popup.clear());
                 popup.archiveName.focus(popup.makeWhite);
                 popup.packageName.focus(popup.makeWhite);
             },
@@ -128,9 +123,65 @@ $(document).ready(function () {
                 switch (key) {
                     case "p1":
                         var data = changes[key].newValue;
-                        log.msg("Data received");
-                        popup.cl.paintJSON(data);
-                        popup.cl.paintJava(data);
+                        log.msg(data);
+                        var parseData = $.parseJSON(data)
+                        log.msg("\n\nParseData:")
+                        log.msg(parseData)
+                        //START
+
+                        try {
+                            var editor = new JSONEditor(document.getElementById("editor_holder"), {
+                                iconlib: "bootstrap2",
+                                ajax: true,
+                                disable_array_reorder : true,
+                                disable_properties : true,
+                                // The schema for the editor
+                                schema: {
+                                    type: "array",
+                                    title: "Pages",
+                                    items: {
+                                        headerTemplate: "{{self.title}}",
+                                        title: "Page",
+                                        oneOf: [
+                                            {
+                                                $ref: "page.json",
+                                            },
+                                        ]
+                                    },
+                                    options: {
+                                        "disable_array_delete": true,
+                                        "disable_properties": true,
+                                        "remove_empty_properties": true,
+                                        "disable_array_add": true
+                                    }
+                                },
+
+                                theme: 'bootstrap2',
+
+                                // Seed the form with a starting value
+                                startval: parseData,
+
+                                // Disable additional properties
+                                no_additional_properties: true,
+
+                                // Require all properties by default
+                                required_by_default: true
+                            });
+                            editor.on("change",  function() {
+                                log.msg("change")
+                                var data = JSON.stringify(editor.getValue()[0]);
+                                log.msg("data after changes: \n" + data + "\n\n")
+                                log.msg("toJava: \n" + JSON.stringify(translateToJava2(JSON.parse(data))));
+                                popup.cl.paintJava(data);
+                            });
+
+                        } catch (e) {
+                            alert("error")
+                        }
+
+                        //END
+                        //popup.cl.paintJSON(data);
+                        //popup.cl.paintJava(data);
                         break;
                     case "p2":
                         log.msg.text("p2: " + changes["p2"].newValue);

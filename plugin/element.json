@@ -1,0 +1,39 @@
+{
+  "format": "grid",
+  "type": "array",
+  "title": "Elements",
+  "uniqueItems": false,
+  "items": {
+    "type": "object",
+    "properties": {
+      "type": {
+        "type": "string",
+        "enum": [
+          "IElement",
+          "ITextField",
+          "ITextArea",
+          "IDatePicker",
+          "ITimePicker",
+          "RFileInput",
+          "Form"
+        ],
+        "default": "IElement"
+      },
+      "name": {
+        "type": "string"
+      },
+      "gen":{
+        "type":"string",
+        "options": {
+          "hidden": true
+        }
+      },
+      "elements": {
+        "$ref": "element.json",
+        "options": {
+          "collapsed": true
+        }
+      }
+    }
+  }
+}

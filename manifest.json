@@ -26,6 +26,7 @@
         "libs/jquery-2.1.4.js",
         "libs/json-viewer/jquery.json-viewer.js",
         "libs/string.format-1.0.packed.js",
+        "libs/jsoneditor.js",
         "src/content.js"
       ]
     }

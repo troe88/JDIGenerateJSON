@@ -39,12 +39,14 @@ var containerList = function (mainContainer) {
         local.active = active;
         local.active.on();
     };
-    this.paintJava = function(java){
+    this.paintJava = function(java, thiz){
+        var obj = thiz === undefined ? this : thiz;
         var data = translateToJava2($.parseJSON(java))
-        this.javaArray = data;
-        $.each(this.elems, function (i, val) {
+        obj.javaArray = data;
+        $.each(obj.elems, function (i, val) {
             if (val.name === "java") {
-                val.container.children().text(getJavaStr(data));
+                var t = getJavaStr(data);
+                val.container.children().text(t);
                 val.container.each(function (i, block) {
                     hljs.highlightBlock(block);
                 });
@@ -53,10 +55,62 @@ var containerList = function (mainContainer) {
     };
     this.paintJSON = function(json){
         var data = $.parseJSON(json)
-        console.log("paint JSON")
+        console.log("paint JSON");
+        var jp = this.paintJava;
+        var thiz = this;
         $.each(this.elems, function (i, val) {
             if (val.name === "json") {
-                val.container.children().jsonViewer(data);
+                //val.container.children().jsonViewer(data);
+                try {
+                    var editor = new JSONEditor(document.getElementById("editor_holder"), {
+                        // Enable fetching schemas via ajax
+                        iconlib: "bootstrap2",
+                        ajax: true,
+                        disable_array_reorder : true,
+                        disable_properties : true,
+                        // The schema for the editor
+                        schema: {
+                            type: "array",
+                            title: "Pages",
+                            items: {
+                                headerTemplate: "{{self.title}}",
+                                title: "Page",
+                                oneOf: [
+                                    {
+                                        $ref: "page.json",
+                                    },
+                                ]
+                            },
+                            options: {
+                                "disable_array_delete": true,
+                                "disable_properties": true,
+                                "remove_empty_properties": true,
+                                "disable_array_add": true
+                            }
+                        },
+
+                        theme: 'bootstrap2',
+
+                        // Seed the form with a starting value
+                        startval: data,
+
+                        // Disable additional properties
+                        no_additional_properties: true,
+
+                        // Require all properties by default
+                        required_by_default: true
+                    });
+                    editor.on("change",  function() {
+                        alert("change");
+                        var data = JSON.stringify(editor.getValue()[0]);
+                        alert(translateToJava2(JSON.parse(data)));
+                        jp(data, thiz);
+                    });
+
+                } catch (e) {
+                    alert("error")
+                }
+
             }
         });
     };

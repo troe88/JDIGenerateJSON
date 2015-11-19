@@ -4,8 +4,8 @@
 var Log = function (elem) {
     this.elem = elem;
     this.msg = function (data) {
-        var contains = this.elem.val().length > 0 ? "\n" + this.elem.val() : "";
-        this.elem.val(data + contains);
+        var contains = this.elem.val().length > 0 ? this.elem.val() + "\n" : "";
+        this.elem.val(contains + data);
     };
     this.clear = function () {
         this.elem.val("");

@@ -39,3 +39,7 @@ code {
 textarea {
     width: 95%;
 }
+
+#editor_holder {
+    width: 800px;
+}
