@@ -25,7 +25,7 @@ var ConvertToJavaType = {
 }
 
 function simpleFileld(elem) {
-    var fby = FindByTemplates.css(elem.name);
+    var fby = FindByTemplates.css(elem.locator);
     var field = "\tpublic {0} {1};\n".format(elem.type, elem.name);
     return fby + field;
 }

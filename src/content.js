@@ -133,6 +133,7 @@ function getElementData(tmpElem) {
                 type: this.type,
                 //parent: this.parent,
                 gen: this.gen,
+                locator: this.locator,
                 elements: (this.elements !== undefined) ? ((this.elements.length > 0) ? this.elements : undefined) : undefined
             }
         }
