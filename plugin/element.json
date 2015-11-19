@@ -28,6 +28,9 @@
           "hidden": true
         }
       },
+      "locator":{
+        "type":"string"
+      },
       "elements": {
         "$ref": "element.json",
         "options": {
