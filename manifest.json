@@ -27,6 +27,7 @@
         "libs/json-viewer/jquery.json-viewer.js",
         "libs/string.format-1.0.packed.js",
         "libs/jsoneditor.js",
+        "src/jdiObject.js",
         "src/jsonGenerator.js",
         "src/content.js"
       ]

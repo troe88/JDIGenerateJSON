@@ -70,7 +70,7 @@ var Pagination = function (element) {
 
 var FindByTemplates = {
     css: function (selector) {
-        return "\n\t@FindBy(css = \"[jdi-name={0}]\")\n".format(selector);
+        return "\n\t@FindBy(css = \"{0}\")\n".format(selector);
     },
     byCss: function (selector) {
         return "\n\t\tBy.cssSelector(\"[jdi-name={0}]\")".format(selector);

@@ -14,35 +14,26 @@ $.prototype.getCAttribute = function (name) {
     return this.attr(name);
 }
 
-var structElement = function (typeOrRawElement, nameOrSpec, parent, gen, locator, elements) {
-    if (arguments.length === 2) {
-        this.type = typeOrRawElement.getCAttribute(nameOrSpec.jdi_type);
-        this.name = typeOrRawElement.getCAttribute(nameOrSpec.jdi_name);
-        this.parent = typeOrRawElement.getCAttribute(nameOrSpec.jdi_parent);
-        this.gen = typeOrRawElement.getCAttribute(nameOrSpec.jdi_gen);
-        this.locator = "[{0}={1}]".format(nameOrSpec.jdi_name, typeOrRawElement.getCAttribute(nameOrSpec.jdi_name));
-        this.elements = []
-    } else if (arguments.length === 6) {
-        this.type = typeOrRawElement;
-        this.name = nameOrSpec;
-        this.parent = parent;
-        this.gen = gen;
-        this.locator = locator;
-        this.elements = elements;
-    } else {
-        throw "Wrong input arguments({0}), must be 2 or 6".format(arguments.length);
-    }
-    this.toJSON = function () {
+var structElement = function (rawElement, spec) {
+    var temp = jdiObject(
+        rawElement.getCAttribute(spec.jdi_name),
+        rawElement.getCAttribute(spec.jdi_type),
+        rawElement.getCAttribute(spec.jdi_gen),
+        new Array,
+        "[{0}={1}]".format(spec.jdi_name, rawElement.getCAttribute(spec.jdi_name))
+    );
+    temp.parent = rawElement.getCAttribute(spec.jdi_parent);
+    temp.toJSON = function(){
         return {
             type: this.type,
             name: this.name,
-            //parent:this.parent,
             gen: this.gen,
             locator: this.locator,
             elements: this.elements.length === 0 ? undefined : this
                 .elements,
         }
     }
+    return temp;
 }
 
 var structPage = function (packageName) {
@@ -138,29 +129,3 @@ var jsonPageGenerator = function (attrSpec, options, container) {
         return JSON.stringify(_page, replacer, space);
     };
 };
-
-//$(document).ready(function () {
-//
-//    // Defined jdi-attribute specification
-//    var spec = {
-//        jdi_type: "jdi-type",
-//        jdi_name: "jdi-name",
-//        jdi_parent: "jdi-parent",
-//        jdi_gen: "jdi-gen",
-//    };
-//
-//    // Defined JSON options
-//    var opt = {
-//        packageName: "com.my.test",
-//    }
-//
-//    // Init json generator
-//    var jsonGen = new jsonPageGenerator(spec, opt, document);
-//    // Get Object
-//    console.log(jsonGen.getPageStruct());
-//    // Get JSON string
-//    console.log(jsonGen.getJSON(undefined, 2));
-//
-//    // Generate new element by raw element
-//    console.log(new structElement($("[id=login]"), spec));
-//});
