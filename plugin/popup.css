@@ -40,6 +40,16 @@ textarea {
     width: 95%;
 }
 
-#editor_holder {
-    width: 800px;
+#container {
+    width: 1200px;
+}
+
+#jsonStr {
+    float: left;
+    width: 49%;
+}
+
+#javaStr {
+    float: right;
+    width: 49%;
 }

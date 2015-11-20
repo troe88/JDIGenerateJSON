@@ -19,7 +19,7 @@ $(document).ready(function () {
                 var cl_temp = new containerList($('[class=contentContainer]'));
                 cl_temp.add(new dataTabContainer("java", $("[id=java]"), $("[id=javaStr]")));
                 cl_temp.add(new dataTabContainer("json", $("[id=json]"), $("[id=jsonStr]")));
-                cl_temp.on("java");
+                //cl_temp.on("java");
                 return cl_temp;
             })(),
             checkPackageName: function () {
@@ -75,7 +75,8 @@ $(document).ready(function () {
                 chrome.runtime.sendMessage(
                     {
                         name: "val1", data: {
-                        "isMark": popup.isMark(),
+                        //"isMark": popup.isMark(),
+                        "isMark": false,
                         "packageName": popup.packageName.val(),
                     }
                     });
@@ -127,14 +128,12 @@ $(document).ready(function () {
                         var parseData = $.parseJSON(data)
                         log.msg("\n\nParseData:")
                         log.msg(parseData)
-                        //START
-
                         try {
                             var editor = new JSONEditor(document.getElementById("editor_holder"), {
                                 iconlib: "bootstrap2",
                                 ajax: true,
-                                disable_array_reorder : true,
-                                disable_properties : true,
+                                disable_array_reorder: true,
+                                disable_properties: true,
                                 // The schema for the editor
                                 schema: {
                                     type: "array",
@@ -167,7 +166,7 @@ $(document).ready(function () {
                                 // Require all properties by default
                                 required_by_default: true
                             });
-                            editor.on("change",  function() {
+                            editor.on("change", function () {
                                 log.msg("change")
                                 var data = JSON.stringify(editor.getValue()[0]);
                                 log.msg("data after changes: \n" + data + "\n\n")
