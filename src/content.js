@@ -3,13 +3,6 @@ var jdi_name = "jdi-name";
 var jdi_parent = "jdi-parent";
 var jdi_gen = "jdi-gen"
 
-var ITextField = "ITextField";
-var ITextArea = "ITextArea";
-var IButton = "IButton";
-var IForm = "IForm"
-var IPage = "IPage"
-var IElement = "IElement"
-
 var options = {
     onlyMark: "false",
     isMark: "",
@@ -116,7 +109,23 @@ function removeAllChildren(arr) {
     }
     return res;
 }
-console.log("DIMA START");
+
+var genElement = function(rawData) {
+    this.type = "";
+    this.name = "";
+    this.parent = "";
+    this.gen = "";
+    this.elements = [];
+    this.locator = "";
+    this.toJSON = function () {
+        return {
+            type: this.type,
+            gen: this.gen,
+            locator: this.locator,
+            elements: this.elements
+        }
+    }
+}
 
 function getElementData(tmpElem) {
     return temp = {
