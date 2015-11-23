@@ -61,30 +61,30 @@ var jsonPageGenerator = function (attrSpec, options, container) {
     var _page = undefined;
     var _options = options;
 
-    this.getJDIElements = function () {
+    var getJDIElements = function () {
         return _container.querySelectorAllArray("[" + _attrSpec.jdi_type + "]");
     }
 
-    this.rawElement2Json = function (rawElement) {
+    var rawElement2Json = function (rawElement) {
         return new structElement(rawElement, _attrSpec);
-    };
+    }
 
-    this.filterParent = function (element) {
+    var filterParent = function (element) {
         if (element.parent !== undefined)
             return element;
     }
 
-    this.filterRoot = function (element) {
+    var filterRoot = function (element) {
         if (element.parent === undefined)
             return element;
     }
 
-    this.process = function (prn, cld) {
+    var process = function (prn, cld) {
         for (var i = 0; i < cld.length; i++) {
             for (var j = 0; j < prn.length; j++) {
                 if (prn[j].elements !== undefined)
                     if (prn[j].elements.length > 0) {
-                        this.process(prn[j].elements, cld);
+                        process(prn[j].elements, cld);
                     }
                 j = (prn[j] === undefined) ? 0 : j;
                 i = (cld[i] === undefined) ? 0 : i;
@@ -97,35 +97,35 @@ var jsonPageGenerator = function (attrSpec, options, container) {
         }
     }
 
-    this.processPageElements = function (array) {
+    var processPageElements = function (array) {
         try {
             var rawElements = array;
-            var allElements = jQuery.map(rawElements, this.rawElement2Json);
-            var rootElements = jQuery.map(allElements, this.filterRoot);
-            var childElements = jQuery.map(allElements, this.filterParent);
-            this.process(rootElements, childElements);
+            var allElements = jQuery.map(rawElements, rawElement2Json);
+            var rootElements = jQuery.map(allElements, filterRoot);
+            var childElements = jQuery.map(allElements, filterParent);
+            process(rootElements, childElements);
             return rootElements;
         } catch (e){
             console.log(e);
         }
-    };
+    }
 
-    this.translatePage2Struct = function () {
-        var elements = this.getJDIElements();
+    var translatePage2Struct = function () {
+        var elements = getJDIElements();
         _page = new structPage(_options.packageName);
-        _page.elements = this.processPageElements(elements);
-    };
+        _page.elements = processPageElements(elements);
+    }
 
     this.getPageStruct = function () {
         if (_page === undefined)
-            this.translatePage2Struct();
+            translatePage2Struct();
         return _page;
-    };
+    }
 
     this.getJSON = function (replacer, space) {
         if (_page === undefined) {
-            this.translatePage2Struct();
+            translatePage2Struct();
         }
         return JSON.stringify(_page, replacer, space);
-    };
-};
+    }
+}
